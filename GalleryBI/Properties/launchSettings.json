@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GalleryBI": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7209 --verbose"
+    }
+  }
+}
