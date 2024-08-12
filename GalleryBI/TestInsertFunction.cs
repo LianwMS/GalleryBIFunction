@@ -16,8 +16,6 @@ namespace GalleryBI
         private string databaseName = "BIData";
         private string tableName = "TestTemplateInfo";
 
-
-
         public TestInsertFunction(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TestInsertFunction>();
@@ -57,10 +55,9 @@ namespace GalleryBI
                 // Create an ingestion operation
                 var ingestionProperties = new KustoQueuedIngestionProperties(databaseName, tableName)
                 {
-                    Format = DataSourceFormat.json,
+                    Format = DataSourceFormat.multijson,
                     IngestionMapping = new IngestionMapping()
-                    {
-                        IngestionMappingKind = Kusto.Data.Ingestion.IngestionMappingKind.Json,
+                    {                        
                         IngestionMappingReference = MappingInfo.templateInfo_jsonMappingName
                     }
                 };
