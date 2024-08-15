@@ -3,7 +3,7 @@ using Kusto.Data.Common;
 
 namespace GalleryBI
 {
-    internal class Template
+    public class Template
     {
         public DateTime TimeStamp { get; set; }
         public string? Catalog { get; set; }
@@ -11,17 +11,19 @@ namespace GalleryBI
         public string? Url { get; set; }
         public string? Author { get; set; }
         public string? Website { get; set; }
-        public string? Tags { get; set; }
+        public List<string>? Tags { get; set; }
         public long Star { get; set; }
         public long Fork { get; set; }
         public long Watch { get; set; }
         public long Vistor { get; set; }
         public long Clone { get; set; }
+        public List<string>? Topics { get; set; }
+        public string? Source { get; set; }
     }
-    internal class MappingInfo
+    public class TemplateMappingInfo
     {
-        public static string templateInfo_jsonMappingName = "TestJsonMapping";
-        public static readonly ColumnMapping[] templateInfo_jsonMapping = new ColumnMapping[]
+        public static string Name = "TestJsonMapping";
+        public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
             new ColumnMapping { ColumnName = "TimeStamp",  Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.TimeStamp" },  { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Catalog",    Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Catalog" },    { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
@@ -35,6 +37,7 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "Watch", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Watch" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Vistor", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Vistor" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Clone", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Clone" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "Topics", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Topics" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }
