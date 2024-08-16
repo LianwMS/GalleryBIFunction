@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 
 namespace GalleryBI
 {
-    public class TemplateInfoWriter : KustoDataWriterBase<Template>
+    public class ValidationInfoWriter : KustoDataWriterBase<Validation>
     {
-        public TemplateInfoWriter(string clusterUri, string dbName, string tableName, string mappingName, ColumnMapping[] mapping, ILogger logger)
-            : base(clusterUri, dbName, tableName, mappingName, mapping, logger)
+        public ValidationInfoWriter(string clusterUri, string dbName, string tableName, string mappingName, ColumnMapping[] mapping, ILogger logger)
+           : base(clusterUri, dbName, tableName, mappingName, mapping, logger)
         {
         }
 
-        public override async Task WriteAsync(IEnumerable<Template> data)
+        public override async Task WriteAsync(IEnumerable<Validation> data)
         {
             using (var ingestClient = KustoIngestFactory.CreateDirectIngestClient(this.builder))
             {

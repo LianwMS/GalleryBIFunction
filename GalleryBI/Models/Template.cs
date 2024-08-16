@@ -22,6 +22,7 @@ namespace GalleryBI
     }
     public class TemplateMappingInfo
     {
+        private static string tableCommand = ".alter table TemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string )";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {

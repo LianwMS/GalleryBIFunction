@@ -14,7 +14,7 @@ namespace GalleryBI
         {
             this.logger = logger;
 
-            var accessToken = ReaderHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.PATSecretName).Result;
+            var accessToken = ReaderHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.AzurePATSecretName).Result;
             this.githubClient = new GitHubClient(new ProductHeaderValue("TemplateInfoReader"));
             githubClient.Credentials = new Credentials(accessToken);
         }
@@ -45,6 +45,7 @@ namespace GalleryBI
                 template.Fork = templateInfo.ForksCount;
                 template.Topics = templateInfo.Topics.ToList();
             }
+            this.logger.LogInformation("Template count: " + templates.Count);
             return templates;
         }
     }
