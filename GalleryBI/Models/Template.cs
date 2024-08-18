@@ -19,10 +19,11 @@ namespace GalleryBI
         public long Clone { get; set; }
         public List<string>? Topics { get; set; }
         public string? Source { get; set; }
+        public List<string>? ValidationActiveIssues { get; set; }
     }
     public class TemplateMappingInfo
     {
-        private static string tableCommand = ".alter table TemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string )";
+        private static string tableCommand = ".alter table TemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string)";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -39,6 +40,7 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "Vistor", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Vistor" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Clone", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Clone" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Topics", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Topics" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "ValidationActiveIssues", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ValidationActiveIssues" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

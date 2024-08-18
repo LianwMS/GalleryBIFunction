@@ -23,12 +23,13 @@ namespace GalleryBI
             logger.LogInformation("Validation data read successfully.");
 
             var templateWriter = new TemplateInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.TemplateInfoTableName, TemplateMappingInfo.Name, TemplateMappingInfo.Mapping, logger);
-            templateWriter.WriteAsync(templateData).Wait();
-            logger.LogInformation("Template data ingested successfully.");
+            templateWriter.WriteAsync(templateData).Wait();            
 
-            //var validationWriter = new ValidationInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.ValidationInforTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);
-            //validationWriter.WriteAsync(validationData).Wait();
-            //logger.LogInformation("Validation data ingested successfully.");
+            var validationWriter = new ValidationInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.ValidationInforTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);
+            var inputData = validationWriter.RemoveDup(validationData).Result;
+            validationWriter.WriteAsync(inputData).Wait();
+
+
 
             if (myTimer.ScheduleStatus is not null)
             {

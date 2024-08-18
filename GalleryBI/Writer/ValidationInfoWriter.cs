@@ -1,7 +1,6 @@
 ﻿using Kusto.Data.Common;
-using Kusto.Ingest;
+using Kusto.Data.Net.Client;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace GalleryBI
 {
@@ -12,32 +11,45 @@ namespace GalleryBI
         {
         }
 
-        public override async Task WriteAsync(IEnumerable<Validation> data)
+        public async Task<IEnumerable<Validation>> RemoveDup(IEnumerable<Validation> data)
         {
-            using (var ingestClient = KustoIngestFactory.CreateDirectIngestClient(this.builder))
+            var existList = new List<Validation>();
+            var result = new List<Validation>();
+            // Query from Kusto table with data > -10 day
+            using (var queryProvider = KustoClientFactory.CreateCslQueryProvider(this.builder))
             {
-                // Convert data to JSON
-                string jsonData = JsonConvert.SerializeObject(data);
+                var query = $"{this.tableName} | where TimeStamp > ago(8d)";
+                var clientRequestProperties = new ClientRequestProperties() { ClientRequestId = Guid.NewGuid().ToString() };
+                var response = await queryProvider.ExecuteQueryAsync(this.dbName, query, clientRequestProperties).ConfigureAwait(false);
+                int colRunId = response.GetOrdinal("RunId");
+                int colJobId = response.GetOrdinal("JobId");
+                int colUrl = response.GetOrdinal("Url");
 
-                // Create an ingestion operation
-                var ingestionProperties = new KustoQueuedIngestionProperties(this.dbName, this.tableName)
+                while (response.Read())
                 {
-                    Format = DataSourceFormat.multijson,
-                    IngestionMapping = new IngestionMapping()
+                    var existValidation = new Validation()
                     {
-                        IngestionMappingReference = this.mappingName
-                    }
-                };
-
-                // this.logger.LogInformation(jsonData);
-
-                // Ingest data
-                var streamSourceOptions = new StreamSourceOptions { LeaveOpen = false };
-                using (var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(jsonData)))
-                {
-                    await ingestClient.IngestFromStreamAsync(stream, ingestionProperties, streamSourceOptions).ConfigureAwait(false);
+                        RunId = response.GetString(colRunId),
+                        JobId = response.GetString(colJobId),
+                        Url = response.GetString(colUrl),
+                    };
+                    existList.Add(existValidation);
                 }
             }
+
+            using (IEnumerator<Validation> enumerator = data.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    var validation = enumerator.Current;
+                    if (existList.Where(e => e.RunId == validation.RunId && e.JobId == validation.JobId && e.Url == validation.Url).Count() == 0)
+                    {
+                        result.Add(validation);
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

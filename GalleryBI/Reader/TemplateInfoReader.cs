@@ -44,6 +44,15 @@ namespace GalleryBI
                 template.Star = templateInfo.StargazersCount;
                 template.Fork = templateInfo.ForksCount;
                 template.Topics = templateInfo.Topics.ToList();
+
+                var repoIssueRequest = new RepositoryIssueRequest()
+                {
+                    Creator = "ai-apps-bot",
+                    State = ItemStateFilter.Open
+                };
+                var issues = await this.githubClient.Issue.GetAllForRepository(owner, repoName, repoIssueRequest).ConfigureAwait(false);
+                template.ValidationActiveIssues = issues.Select(i => i.Url).ToList();
+
             }
             this.logger.LogInformation("Template count: " + templates.Count);
             return templates;
