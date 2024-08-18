@@ -77,5 +77,39 @@ namespace GalleryBI
             return (owner, repoName);
         }
 
+        public static (string ownerName, string repoName, int issueId) ParseIssueUrl(string issueUrl)
+        {
+            // Ensure the URL is well-formed
+            if (Uri.TryCreate(issueUrl, UriKind.Absolute, out Uri? uri))
+            {
+                // Split the path segments
+                string[] segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+                // Validate the URL format
+                if (segments.Length >= 4 && segments[2] == "issues")
+                {
+                    string ownerName = segments[0];
+                    string repoName = segments[1];
+
+                    // Try to parse the issue ID
+                    if (int.TryParse(segments[3], out int issueId))
+                    {
+                        return (ownerName, repoName, issueId);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Issue ID is not a valid integer.");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("The provided URL does not follow the expected GitHub issue URL format.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("The provided string is not a valid URL.");
+            }
+        }
     }
 }

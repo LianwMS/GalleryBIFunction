@@ -13,7 +13,7 @@ namespace GalleryBI
             this.logger = logger;
 
             var accessToken = ReaderHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.Hund030PATSecretName).Result;
-            this.githubClient = new GitHubClient(new ProductHeaderValue("TemplateInfoReader"));
+            this.githubClient = new GitHubClient(new ProductHeaderValue("ValidationInfoReader"));
             githubClient.Credentials = new Credentials(accessToken);
         }
 

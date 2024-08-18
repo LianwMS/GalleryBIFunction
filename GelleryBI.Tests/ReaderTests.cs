@@ -28,5 +28,30 @@ namespace GelleryBI.Tests
             var result = reader.ReadAsync().Result;
             Assert.AreNotEqual(-1, result.Count());
         }
+
+        public void IssueReaderTest()
+        {
+            var templateReader = new TemplateInfoReader(logger);
+            var templates = templateReader.ReadAsync().Result;
+
+            var validationReader = new ValidationReader(logger);
+            var validations = validationReader.ReadAsync().Result;
+
+            List<string> allValidationActiveIssues = templates
+            .Where(t => t.ValidationActiveIssues != null)
+            .SelectMany(t => t.ValidationActiveIssues ?? new List<string>())
+            .Distinct()
+            .ToList();
+
+            if (validations != null)
+            {
+                List<string> openedIn7DaysIssues = validations
+                    .Where(t => t.Details != null && t.Details.StartsWith("https"))
+                    .Select(t => t.Details)
+                    .Distinct()
+                    .ToList();
+            }
+
+        }
     }
 }
