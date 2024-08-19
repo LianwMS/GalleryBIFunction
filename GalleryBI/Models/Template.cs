@@ -20,10 +20,11 @@ namespace GalleryBI
         public List<string>? Topics { get; set; }
         public string? Source { get; set; }
         public List<string>? ValidationActiveIssues { get; set; }
+        public List<string>? ValidationNonActiveIssues { get; set; }
     }
     public class TemplateMappingInfo
     {
-        private static string tableCommand = ".alter table TemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string)";
+        private static string tableCommand = ".alter table TestTemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string, ValidationNonActiveIssues:string)";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -41,6 +42,7 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "Clone", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Clone" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Topics", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Topics" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "ValidationActiveIssues", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ValidationActiveIssues" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "ValidationNonActiveIssues", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ValidationNonActiveIssues" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

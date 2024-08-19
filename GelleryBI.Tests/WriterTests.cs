@@ -57,5 +57,26 @@ namespace GelleryBI.Tests
 
             var dataRemoveDup = writer.RemoveDup(data).Result;
         }
+
+        [TestMethod]
+        public void IssueInfoWriterTest()
+        {
+            var writer = new IssueInfoWriter(TestAppContext.ClusterUri, TestAppContext.BIDBName, TestAppContext.IssueInfoTableName, IssueMappingInfo.Name, IssueMappingInfo.Mapping, logger);
+            var data = new List<Issue>()
+            {
+                new Issue()
+                {
+                    TimeStamp = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow,
+                    ClosedAt = null,
+                    Id = "12345",
+                    Status = "Open",
+                    TemplateName = "TemplateName",
+                    Title = "Title",
+                    Url = "Url",
+                }
+            };
+            writer.WriteAsync(data).Wait();
+        }
     }
 }

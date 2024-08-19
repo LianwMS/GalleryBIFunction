@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GelleryBI.Tests
+﻿namespace GelleryBI.Tests
 {
     internal class TestAppContext
     {
@@ -25,5 +19,6 @@ namespace GelleryBI.Tests
         public const string BIDBName = "BIData";
         public const string TemplateInfoTableName = "TemplateInfo";
         public const string ValidationInfoTableName = "TestValidations";
+        public const string IssueInfoTableName = "TestIssues";
     }
 }

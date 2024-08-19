@@ -18,18 +18,33 @@ namespace GalleryBI
             logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
             var templateData = new TemplateInfoReader(logger).ReadAsync().Result;
-            logger.LogInformation("Template data read successfully.");
-            var validationData = new ValidationReader(logger).ReadAsync().Result;
-            logger.LogInformation("Validation data read successfully.");
+
+            var validationData = new ValidationInfoReader(logger).ReadAsync().Result;
+
+            var openedIssues = templateData
+                .Where(t => t.ValidationActiveIssues != null)
+                .SelectMany(t => t.ValidationActiveIssues ?? new List<string>());
+
+            var closedIssues = templateData
+                .Where(t => t.ValidationNonActiveIssues != null)
+                .SelectMany(t => t.ValidationNonActiveIssues ?? new List<string>());
+
+            var openedIn7DaysIssues = validationData
+                .Where(t => t.Details != null && t.Details.StartsWith("https"))
+                .Select(t => t.Details);
+
+            var issuesUrlList = openedIssues.Union(closedIssues).Union(openedIn7DaysIssues).ToList();
+            var issueData = new IssueInfoReader(logger).ReadAsync(issuesUrlList).Result;
 
             var templateWriter = new TemplateInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.TemplateInfoTableName, TemplateMappingInfo.Name, TemplateMappingInfo.Mapping, logger);
-            templateWriter.WriteAsync(templateData).Wait();            
+            templateWriter.WriteAsync(templateData).Wait();
 
             var validationWriter = new ValidationInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.ValidationInforTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);
             var inputData = validationWriter.RemoveDup(validationData).Result;
             validationWriter.WriteAsync(inputData).Wait();
 
-
+            var issueWriter = new IssueInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.IssueInfoTableName, IssueMappingInfo.Name, IssueMappingInfo.Mapping, logger);
+            issueWriter.WriteAsync(issueData).Wait();
 
             if (myTimer.ScheduleStatus is not null)
             {

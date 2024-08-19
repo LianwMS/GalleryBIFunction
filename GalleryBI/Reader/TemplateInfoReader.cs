@@ -48,13 +48,15 @@ namespace GalleryBI
                 var repoIssueRequest = new RepositoryIssueRequest()
                 {
                     Creator = "ai-apps-bot",
-                    State = ItemStateFilter.Open
+                    State = ItemStateFilter.All
                 };
                 var issues = await this.githubClient.Issue.GetAllForRepository(owner, repoName, repoIssueRequest).ConfigureAwait(false);
-                template.ValidationActiveIssues = issues.Select(i => i.Url).ToList();
+                template.ValidationActiveIssues = issues.Where(i => i.State == ItemState.Open).Select(i => i.HtmlUrl).ToList();
+                template.ValidationNonActiveIssues = issues.Where(i => i.State != ItemState.Open).Select(i => i.HtmlUrl).ToList();
 
             }
-            this.logger.LogInformation("Template count: " + templates.Count);
+            this.logger.LogInformation("Templates count: " + templates.Count);
+            this.logger.LogInformation("Templates data read successfully.");
             return templates;
         }
     }

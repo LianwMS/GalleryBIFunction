@@ -25,5 +25,6 @@
         public const string BIDBName = "BIData";
         public const string TemplateInfoTableName = "TemplateInfo";
         public const string ValidationInforTableName = "Validations";
+        public const string IssueInfoTableName = "Issues";
     }
 }

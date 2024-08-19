@@ -3,12 +3,12 @@ using Octokit;
 
 namespace GalleryBI
 {
-    public class ValidationReader
+    public class ValidationInfoReader
     {
         private readonly ILogger logger;
         private readonly GitHubClient githubClient;
 
-        public ValidationReader(ILogger logger)
+        public ValidationInfoReader(ILogger logger)
         {
             this.logger = logger;
 
@@ -84,7 +84,8 @@ namespace GalleryBI
                 }
             }
 
-            this.logger.LogInformation("Validation count: " + validations.Count);
+            this.logger.LogInformation("Validations count: " + validations.Count);
+            this.logger.LogInformation("Validations data read successfully.");
             return validations;
         }
     }
