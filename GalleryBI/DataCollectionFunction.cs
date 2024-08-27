@@ -12,8 +12,8 @@ namespace GalleryBI
             logger = loggerFactory.CreateLogger<DataCollectionFunction>();
         }
 
-        [Function("TestInsertFunction")]
-        public void Run([TimerTrigger("0 */2 * * * *")] TimerInfo myTimer)
+        [Function("DataCollectionFunction")]
+        public void Run([TimerTrigger("0 0 */12 * * *")] TimerInfo myTimer)
         {
             logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 

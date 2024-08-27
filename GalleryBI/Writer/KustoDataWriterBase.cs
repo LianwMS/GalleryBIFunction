@@ -23,7 +23,8 @@ namespace GalleryBI
             this.clusterUri = clusterUri;
             this.dbName = dbName;
             this.tableName = tableName;
-            this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadUserPromptAuthentication();
+            this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadSystemManagedIdentity();
+            //this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadUserPromptAuthentication();
             this.logger = logger;
             this.mappingName = mappingName;
             this.mappings = mappings;
@@ -60,7 +61,10 @@ namespace GalleryBI
                 }
                 logger.LogInformation($"{typeof(T)} data ingested successfully.");
             }
-            logger.LogInformation($"Skip data ingested since null or empty.");
+            else
+            {
+                logger.LogInformation($"Skip data ingested since null or empty.");
+            }
         }
 
         protected void CreateJsonMappingIfNotExists()

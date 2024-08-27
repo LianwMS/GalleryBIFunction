@@ -16,7 +16,7 @@
         public const string TemplateFilePath = "website/static/templates.json";
 
         // Validation
-        public const string ValidationRepoOwner = "hund030";
+        public const string ValidationRepoOwner = "Azure";
         public const string ValidationRepoName = "ai-apps";
         public const string ValidationWorkflowName = "Regular Template Validation";
 
