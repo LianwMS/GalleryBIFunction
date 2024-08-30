@@ -14,11 +14,13 @@ namespace GalleryBI
         public string? WorkflowName { get; set; }
         public string? RunId { get; set; }
         public string? JobId { get; set; }
+        public DateTime RunStartTime { get; set; }
+        public string? AttemptId { get; set; }
     }
 
     public class ValidationMappingInfo
     {
-        private static string tableCommand = ".alter table Validations ( TimeStamp:datetime, Url:string, RunTime:datetime, Result:string, Details:string, WorkflowRepoName: string, WorkflowName: string, RunId: string, JobId: string)";
+        private static string tableCommand = ".alter table Validations ( TimeStamp:datetime, Url:string, RunTime:datetime, Result:string, Details:string, WorkflowRepoName: string, WorkflowName: string, RunId: string, JobId: string, RunStartTime: datetime, AttemptId: string)";
         public static string Name = "ValidationMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -31,6 +33,8 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "WorkflowName", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.WorkflowName" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "RunId", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.RunId" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "JobId", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.JobId" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "RunStartTime", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.RunStartTime" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "AttemptId", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.AttemptId" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

@@ -30,6 +30,8 @@ namespace GelleryBI.Tests
                     WorkflowRepoName = "WorkflowRepoName",
                     RunId = "12345",
                     JobId = "12345",
+                    RunStartTime= DateTime.UtcNow,
+                    AttemptId = "12345"
                 }
             };
             writer.WriteAsync(data).Wait();

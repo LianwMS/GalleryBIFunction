@@ -54,7 +54,9 @@ namespace GalleryBI
                                     WorkflowRepoName = workflowRepoFullName,
                                     WorkflowName = candidates.WorkflowRuns[i].Name,
                                     RunId = jobs.Jobs[j].RunId.ToString(),
-                                    JobId = jobs.Jobs[j].Id.ToString()
+                                    JobId = jobs.Jobs[j].Id.ToString(),
+                                    RunStartTime = candidates.WorkflowRuns[i].CreatedAt.DateTime,
+                                    AttemptId = candidates.WorkflowRuns[i].RunAttempt.ToString()
                                 };
                                 if (jobs.Jobs[j].Conclusion == WorkflowJobConclusion.Failure)
                                 {
