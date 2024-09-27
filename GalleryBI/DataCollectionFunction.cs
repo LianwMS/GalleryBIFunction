@@ -36,15 +36,15 @@ namespace GalleryBI
             var issuesUrlList = openedIssues.Union(closedIssues).Union(openedIn7DaysIssues).ToList();
             var issueData = new IssueInfoReader(logger).ReadAsync(issuesUrlList).Result;
 
-            var templateWriter = new TemplateInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.TemplateInfoTableName, TemplateMappingInfo.Name, TemplateMappingInfo.Mapping, logger);
-            templateWriter.WriteAsync(templateData).Wait();
+            //var templateWriter = new TemplateInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.TemplateInfoTableName, TemplateMappingInfo.Name, TemplateMappingInfo.Mapping, logger);
+            //templateWriter.WriteAsync(templateData).Wait();
 
-            var validationWriter = new ValidationInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.ValidationInforTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);
-            var inputData = validationWriter.RemoveDup(validationData).Result;
-            validationWriter.WriteAsync(inputData).Wait();
+            //var validationWriter = new ValidationInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.ValidationInforTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);
+            //var inputData = validationWriter.RemoveDup(validationData).Result;
+            //validationWriter.WriteAsync(inputData).Wait();
 
-            var issueWriter = new IssueInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.IssueInfoTableName, IssueMappingInfo.Name, IssueMappingInfo.Mapping, logger);
-            issueWriter.WriteAsync(issueData).Wait();
+            //var issueWriter = new IssueInfoWriter(AppContext.ClusterUri, AppContext.BIDBName, AppContext.IssueInfoTableName, IssueMappingInfo.Name, IssueMappingInfo.Mapping, logger);
+            //issueWriter.WriteAsync(issueData).Wait();
 
             if (myTimer.ScheduleStatus is not null)
             {
