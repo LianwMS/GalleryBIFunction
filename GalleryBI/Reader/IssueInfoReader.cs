@@ -12,7 +12,7 @@ namespace GalleryBI
         {
             this.logger = logger;
 
-            var accessToken = ReaderHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.AzurePATSecretName).Result;
+            var accessToken = AzureHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.AzurePATSecretName).Result;
             this.githubClient = new GitHubClient(new ProductHeaderValue("IssueReader"));
             githubClient.Credentials = new Credentials(accessToken);
         }
@@ -27,7 +27,7 @@ namespace GalleryBI
                 while (enumerator.MoveNext())
                 {
                     var issueUrl = enumerator.Current;
-                    var (owner, repoName, issueId) = ReaderHelper.ParseIssueUrl(issueUrl);
+                    var (owner, repoName, issueId) = GithubHelper.ParseIssueUrl(issueUrl);
                     var issue = githubClient.Issue.Get(owner, repoName, issueId);
                     var tempIssue = new Issue()
                     {

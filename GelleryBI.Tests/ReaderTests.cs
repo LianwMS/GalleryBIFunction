@@ -1,8 +1,8 @@
-﻿using GalleryBI;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace GelleryBI.Tests
+namespace GalleryBI.Tests
 {
     [TestClass]
     public class ReaderTests

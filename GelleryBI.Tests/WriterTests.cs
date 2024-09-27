@@ -1,7 +1,7 @@
-﻿using GalleryBI;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GelleryBI.Tests
+namespace GalleryBI.Tests
 {
     [TestClass]
     public class WriterTests
@@ -79,6 +79,33 @@ namespace GelleryBI.Tests
                 }
             };
             writer.WriteAsync(data).Wait();
+        }
+
+        [TestMethod]
+        public void EmailInfoWriterTest()
+        {
+            var randomIssueLink = "IssueLink" + Guid.NewGuid().ToString();
+            var emailMetadata = new EmailMetadata()
+            {
+                Repo = "https://github.com/LianwMS/GalleryBIFunction",
+                IssueLink = randomIssueLink,
+                IssueCatalog = IssueCatalogs.High,
+                IssueDate = DateTime.UtcNow.ToString(),
+                OwnerEmailList = "lianw@microsoft.com",
+                EmailTemplateCatalogs = EmailTemplateCatalogs.FirstFixNotification,
+            };
+            var email = emailMetadata.GenerateEmail();
+            var data = new List<Email>();
+            data.Add(email);
+
+            var writer = new EmailInfoWriter(TestAppContext.ClusterUri, TestAppContext.BIDBName, TestAppContext.EmailTableName, EmailMappingInfo.Name, EmailMappingInfo.Mapping, logger);
+
+            var dataInsert = writer.RemoveDup(data).Result;
+            Assert.AreEqual(1, dataInsert.Count());
+
+            writer.WriteAsync(data).Wait();
+            var dataInsertAgain = writer.RemoveDup(data).Result;
+            Assert.AreEqual(0, dataInsertAgain.Count());
         }
     }
 }

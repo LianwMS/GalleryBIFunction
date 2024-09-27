@@ -1,4 +1,4 @@
-﻿namespace GelleryBI.Tests
+﻿namespace GalleryBI.Tests
 {
     internal class TestAppContext
     {
@@ -20,5 +20,6 @@
         public const string TemplateInfoTableName = "TemplateInfo";
         public const string ValidationInfoTableName = "TestValidations";
         public const string IssueInfoTableName = "TestIssues";
+        public const string EmailTableName = "TestEmails";
     }
 }

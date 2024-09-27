@@ -23,8 +23,10 @@ namespace GalleryBI
             this.clusterUri = clusterUri;
             this.dbName = dbName;
             this.tableName = tableName;
+            // For cloud run
             this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadSystemManagedIdentity();
-            //this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadUserPromptAuthentication();
+            // For local run
+            // this.builder = new KustoConnectionStringBuilder(clusterUri).WithAadUserPromptAuthentication();
             this.logger = logger;
             this.mappingName = mappingName;
             this.mappings = mappings;
