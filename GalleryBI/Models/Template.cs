@@ -1,5 +1,6 @@
 ﻿using Kusto.Cloud.Platform.Utils;
 using Kusto.Data.Common;
+using Newtonsoft.Json;
 
 namespace GalleryBI
 {
@@ -9,6 +10,7 @@ namespace GalleryBI
         public string? Catalog { get; set; }
         public string? Name { get; set; }
         public string? Url { get; set; }
+        [JsonIgnore]
         public string? Author { get; set; }
         public string? Website { get; set; }
         public List<string>? Tags { get; set; }
