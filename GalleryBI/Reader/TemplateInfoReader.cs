@@ -14,7 +14,7 @@ namespace GalleryBI
         {
             this.logger = logger;
 
-            var accessToken = ReaderHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.AzurePATSecretName).Result;
+            var accessToken = AzureHelper.GetSecretFromKV(AppContext.BIKVUri, AppContext.AzurePATSecretName).Result;
             this.githubClient = new GitHubClient(new ProductHeaderValue("TemplateInfoReader"));
             githubClient.Credentials = new Credentials(accessToken);
         }
@@ -36,7 +36,7 @@ namespace GalleryBI
                 template.Url = template.Source;
                 template.Catalog = TemplateCatalogs.AI;
 
-                var (owner, repoName) = ReaderHelper.GetRepoOwnerAndName(template.Source);
+                var (owner, repoName) = GithubHelper.GetRepoOwnerAndName(template.Source);
 
                 var templateInfo = await this.githubClient.Repository.Get(owner, repoName).ConfigureAwait(false);
                 template.Name = templateInfo.FullName;

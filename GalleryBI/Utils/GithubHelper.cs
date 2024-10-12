@@ -1,30 +1,73 @@
 ﻿using System.Net.Http.Headers;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+using Octokit;
 
 namespace GalleryBI
 {
-    internal class ReaderHelper
+    public class GithubHelper
     {
-        public static async Task<string> GetSecretFromKV(string keyVaultUri, string secretName)
+        public static async Task<string> GetTemplateOwner(GitHubClient githubClient, string? templateUrl)
         {
-            try
+            var ownerEmails = string.Empty;
+            if (!string.IsNullOrEmpty(templateUrl))
             {
-                // Create a SecretClient with DefaultAzureCredential, which uses Managed Identity by default
-                var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+                // Find Owner file
+                // Find latest committer
+                (string owner, string repoName) = GetRepoOwnerAndName(templateUrl);
+                var contributors = await githubClient.Repository.GetAllContributors(owner, repoName).ConfigureAwait(false);
 
-                // Retrieve the secret
-                KeyVaultSecret secret = await client.GetSecretAsync(secretName);
+                var selectFromContributorsNum = 5;
+                if (contributors.Count == 0)
+                {
+                    ownerEmails = AppContext.TemplateDefaultOwner;
+                }
+                else if (contributors.Count < selectFromContributorsNum)
+                {
+                    selectFromContributorsNum = contributors.Count;
+                }
 
-                // Return the secret value
-                return secret.Value;
+                for (int i = 0; i < selectFromContributorsNum; i++)
+                {
+                    var contributor = await githubClient.User.Get(contributors[i].Login).ConfigureAwait(false);
+                    var contributorEmail = contributor.Email;
+                    if (!string.IsNullOrEmpty(contributorEmail))
+                    {
+                        ownerEmails = string.IsNullOrEmpty(ownerEmails) ? contributorEmail : ownerEmails + ";" + contributorEmail;
+                    }
+                }
             }
-            catch (Exception ex)
+
+            if (string.IsNullOrEmpty(ownerEmails))
             {
-                // Handle exceptions (log, rethrow, etc.)
-                Console.WriteLine($"Error retrieving secret from Azure Key Vault: {ex.Message}");
-                throw;
+                ownerEmails = AppContext.TemplateDefaultOwner;
             }
+
+            return ownerEmails;
+        }
+
+        public static async Task<IssueCatalogs> GetIssueCatalog(GitHubClient githubClient, string? issueUrl)
+        {
+            var result = IssueCatalogs.Moderate;
+            if (!string.IsNullOrWhiteSpace(issueUrl))
+            {
+                (string owner, string repoName, int issueId) = ParseIssueUrl(issueUrl);
+                var issue = await githubClient.Issue.Get(owner, repoName, issueId).ConfigureAwait(false);
+                if (issue.Body != null)
+                {
+                    if (issue.Body.Contains("Severity: High", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        result = IssueCatalogs.High;
+                    }
+                    else if (issue.Body.Contains("Severity: Low", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        result = IssueCatalogs.Low;
+                    }
+                    else if (issue.Body.Contains("Severity: Moderate", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        result = IssueCatalogs.Moderate;
+                    }
+                }
+            }
+            return result;
         }
 
         public static async Task<string> GetFileContextFromGithubRepo(string fileUrl, string accessToken)

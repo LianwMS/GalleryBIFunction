@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace GelleryBI.Tests
+namespace GalleryBI.Tests
 {
     public class TestConsoleLogge : ILogger
     {
