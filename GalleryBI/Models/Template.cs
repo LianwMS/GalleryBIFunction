@@ -20,13 +20,21 @@ namespace GalleryBI
         public long Vistor { get; set; }
         public long Clone { get; set; }
         public List<string>? Topics { get; set; }
+        [JsonProperty("language")]
+        public List<string>? Languages { get; set; }
+        [JsonProperty("models")]
+        public List<string>? Models { get; set; }
+        [JsonProperty("azure_service")]
+        public List<string>? AzureServices { get; set; }
+        [JsonProperty("app_type")]
+        public List<string>? Types { get; set; }
         public string? Source { get; set; }
         public List<string>? ValidationActiveIssues { get; set; }
         public List<string>? ValidationNonActiveIssues { get; set; }
     }
     public class TemplateMappingInfo
     {
-        private static string tableCommand = ".alter table TestTemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string, ValidationNonActiveIssues:string)";
+        private static string tableCommand = ".alter table TestTemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string, ValidationNonActiveIssues:string, Languages:string, Models:string, AzureServices:string, Types:string)";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -45,6 +53,10 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "Topics", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Topics" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "ValidationActiveIssues", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ValidationActiveIssues" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "ValidationNonActiveIssues", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ValidationNonActiveIssues" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "Languages", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.language" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "Models", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.models" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "AzureServices", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.azure_service" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "Types", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.app_type" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

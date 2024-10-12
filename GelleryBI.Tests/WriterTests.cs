@@ -14,6 +14,39 @@ namespace GalleryBI.Tests
         }
 
         [TestMethod]
+        public void TemplateInfoWriterTest()
+        {
+            var writer = new TemplateInfoWriter(TestAppContext.ClusterUri, TestAppContext.BIDBName, TestAppContext.TemplateInfoTableName, TemplateMappingInfo.Name, TemplateMappingInfo.Mapping, logger);
+            var data = new List<Template>()
+            {
+                new Template()
+                {
+                    TimeStamp = DateTime.UtcNow,
+                    Catalog = "Catalog",
+                    Name = "Name",
+                    Url = "Url",
+                    Author = "Author",
+                    Website = "Website",
+                    Tags = new List<string>() { "Tag1", "Tag2" },
+                    Star = 1,
+                    Fork = 1,
+                    Watch = 1,
+                    Vistor = 1,
+                    Clone = 1,
+                    Topics = new List<string>() { "Topic1", "Topic2" },
+                    Languages = new List<string>() { "Language1", "Language2" },
+                    Models = new List<string>() { "Model1", "Model2" },
+                    AzureServices = new List<string>() { "AzureService1", "AzureService2" },
+                    Types = new List<string>() { "Type1", "Type2" },
+                    Source = "Source",
+                    ValidationActiveIssues = new List<string>() { "ValidationActiveIssue1", "ValidationActiveIssue2" },
+                    ValidationNonActiveIssues = new List<string>() { "ValidationNonActiveIssue1", "ValidationNonActiveIssue2" }
+                }
+            };
+            writer.WriteAsync(data).Wait();
+        }
+
+        [TestMethod]
         public void ValidationInfoWriterTest()
         {
             var writer = new ValidationInfoWriter(TestAppContext.ClusterUri, TestAppContext.BIDBName, TestAppContext.ValidationInfoTableName, ValidationMappingInfo.Name, ValidationMappingInfo.Mapping, logger);

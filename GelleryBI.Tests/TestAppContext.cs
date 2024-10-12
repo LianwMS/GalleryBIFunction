@@ -17,7 +17,7 @@
         // BI Cluster Info
         public const string ClusterUri = "https://gallerybicluster.eastus.kusto.windows.net";
         public const string BIDBName = "BIData";
-        public const string TemplateInfoTableName = "TemplateInfo";
+        public const string TemplateInfoTableName = "TestTemplateInfo";
         public const string ValidationInfoTableName = "TestValidations";
         public const string IssueInfoTableName = "TestIssues";
         public const string EmailTableName = "TestEmails";
