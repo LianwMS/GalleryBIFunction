@@ -53,7 +53,8 @@ namespace GalleryBI
                 {
                     var (owner, repoName, issueId) = GithubHelper.ParseIssueUrl(issueList[j]);
                     var issue = githubClient.Issue.Get(owner, repoName, issueId).Result;
-                    var duration = now - issue.CreatedAt.UtcDateTime;
+                    var issueOpenDate = GithubHelper.GetIssueOpenDateTime(githubClient, issueList[j]).Result;
+                    var duration = now - issueOpenDate;
                     var issueCatalog = GithubHelper.GetIssueCatalog(githubClient, issue.HtmlUrl).Result;
 
                     if (issue.State == ItemState.Open)
@@ -63,7 +64,7 @@ namespace GalleryBI
                             var metadate = new EmailMetadata()
                             {
                                 Repo = template.Url ?? string.Empty,
-                                IssueDate = issue.CreatedAt.UtcDateTime.ToString(),
+                                IssueDate = issueOpenDate.ToString(),
                                 IssueLink = issue.HtmlUrl,
                                 IssueCatalog = issueCatalog,
                                 OwnerEmailList = ownerEmail,
@@ -78,7 +79,7 @@ namespace GalleryBI
                             var metadate = new EmailMetadata()
                             {
                                 Repo = template.Url ?? string.Empty,
-                                IssueDate = issue.CreatedAt.UtcDateTime.ToString(),
+                                IssueDate = issueOpenDate.ToString(),
                                 IssueLink = issue.HtmlUrl,
                                 IssueCatalog = issueCatalog,
                                 OwnerEmailList = ownerEmail,

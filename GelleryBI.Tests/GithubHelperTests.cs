@@ -40,5 +40,16 @@ namespace GalleryBI.Tests
             var catalog = GithubHelper.GetIssueCatalog(githubClient, issueUrl).Result;
             Assert.AreEqual(IssueCatalogs.High, catalog);
         }
+
+        [TestMethod]
+        public void TestGetIssueOpenDate()
+        {
+            var issueUrl = "https://github.com/microsoft/template-validation-action/issues/46";
+            var dateTime = GithubHelper.GetIssueOpenDateTime(githubClient, issueUrl).Result;
+            Assert.AreNotEqual(DateTime.MinValue, dateTime);
+
+            var dateTime2 = GithubHelper.GetIssueOpenDateTime(githubClient, "https://github.com/Azure-Samples/agent-python-openai-prompty-langchain/issues/30").Result;
+            Assert.AreNotEqual(DateTime.MinValue, dateTime2);
+        }
     }
 }

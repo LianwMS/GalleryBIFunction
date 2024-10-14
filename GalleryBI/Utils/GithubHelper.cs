@@ -70,6 +70,23 @@ namespace GalleryBI
             return result;
         }
 
+        public static async Task<DateTime> GetIssueOpenDateTime(GitHubClient githubClient, string issueUrl)
+        {            
+            (string owner, string repoName, int issueId) = ParseIssueUrl(issueUrl);
+            var issue = githubClient.Issue.Get(owner, repoName, issueId).Result;
+            var result = issue.CreatedAt.UtcDateTime;
+
+            var issueEvents = await githubClient.Issue.Events.GetAllForIssue(owner, repoName, issueId).ConfigureAwait(false);
+            for (int i = 0; i < issueEvents.Count; i++)
+            {
+                if (issueEvents[i].Event == EventInfoState.Reopened)
+                {
+                    result = issueEvents[i].CreatedAt.UtcDateTime;
+                }
+            }
+            return result;
+        }
+
         public static async Task<string> GetFileContextFromGithubRepo(string fileUrl, string accessToken)
         {
             using (var httpClient = new HttpClient())
