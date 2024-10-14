@@ -88,8 +88,8 @@ namespace GalleryBI
                             emailList.Add(metadate.GenerateEmail());
                         }
 
-                        if ((issueCatalog == IssueCatalogs.High && duration > LAST_EMAIL_DURATION_END)
-                            || (duration > LAST_EMAIL_DURATION_END))
+                        if ((issueCatalog == IssueCatalogs.High && duration > FIRST_EMAIL_DURATION_END)
+                            || (issueCatalog == IssueCatalogs.Moderate && duration > LAST_EMAIL_DURATION_END))
                         {
                             unpublishList.Add(template.Url);
                         }
