@@ -74,7 +74,7 @@ namespace GalleryBI
 
                             emailList.Add(metadate.GenerateEmail());
                         }
-                        else if (duration >= LAST_EMAIL_DURATION_START && duration <= LAST_EMAIL_DURATION_END && issueCatalog != IssueCatalogs.High)
+                        else if (duration >= LAST_EMAIL_DURATION_START && duration <= LAST_EMAIL_DURATION_END && issueCatalog == IssueCatalogs.Moderate)
                         {
                             var metadate = new EmailMetadata()
                             {
@@ -104,29 +104,24 @@ namespace GalleryBI
             // Send the email in parallel
             logger.LogInformation("Total {0} emails need to be sent.", emailInsertList.Count);
             var emailSender = new EmailSender(logger);
-            var tasks = new List<Task>();
-            try
-            {
-                for (int j = 0; j < emailInsertList.Count; j++)
-                {
-                    var email = emailInsertList[j];
-                    Task task = Task.Run(async () =>
-                    {
-                        await emailSender.SendEmailAsync(email).ConfigureAwait(false);
-                        await emailInfoWriter.WriteAsync(new List<Email>() { email }).ConfigureAwait(false);
-                    });
 
-                    tasks.Add(task);
-                }
-                Task.WhenAll(tasks.ToArray()).Wait();
-            }
-            catch (Exception exception)
+            for (int j = 0; j < emailInsertList.Count; j++)
             {
-                logger.LogError(exception, $"Error in sending email, with {exception.Message}");
+                var email = emailInsertList[j];
+                try
+                {
+                    emailSender.SendEmailAsync(email).Wait();
+                    emailInfoWriter.WriteAsync(new List<Email>() { email }).Wait();
+                }
+                catch (Exception exception)
+                {
+                    logger.LogError(exception, $"Error in sending email, with {exception.Message}");
+                }
             }
 
             // For Testing
             // unpublishList.Add("https://github.com/Azure-Samples/azure-search-openai-demo");
+            // unpublishList.Clear();
 
             // Unpublish the template
             logger.LogInformation("Total {0} tempaltes need to be unpublished.", unpublishList.Count);
