@@ -46,7 +46,7 @@ namespace GalleryBI
             for (int i = 0; i < templatesForEmail.Count; i++)
             {
                 var template = templatesForEmail[i];
-                var ownerEmail = GithubHelper.GetTemplateOwner(githubClient, template.Url).Result;
+                var ownerEmail = GithubHelper.GetTemplateOwner(githubClient, template).Result;
                 var issueList = templatesForEmail[i].ValidationActiveIssues ?? new List<string>();
 
                 for (int j = 0; j < issueList.Count; ++j)

@@ -5,14 +5,20 @@ namespace GalleryBI
 {
     public class GithubHelper
     {
-        public static async Task<string> GetTemplateOwner(GitHubClient githubClient, string? templateUrl)
+        public static async Task<string> GetTemplateOwner(GitHubClient githubClient, Template template)
         {
             var ownerEmails = string.Empty;
-            if (!string.IsNullOrEmpty(templateUrl))
+
+            if (template.Email != null && template.Email.Count > 0)
+            {
+                // template.Email connect item with ';' separator
+                ownerEmails = String.Join("; ", template.Email.ToArray());
+            }
+            else if (!string.IsNullOrEmpty(template.Url))
             {
                 // Find Owner file
                 // Find latest committer
-                (string owner, string repoName) = GetRepoOwnerAndName(templateUrl);
+                (string owner, string repoName) = GetRepoOwnerAndName(template.Url);
                 var contributors = await githubClient.Repository.GetAllContributors(owner, repoName).ConfigureAwait(false);
 
                 var selectFromContributorsNum = 5;
@@ -71,7 +77,7 @@ namespace GalleryBI
         }
 
         public static async Task<DateTime> GetIssueOpenDateTime(GitHubClient githubClient, string issueUrl)
-        {            
+        {
             (string owner, string repoName, int issueId) = ParseIssueUrl(issueUrl);
             var issue = githubClient.Issue.Get(owner, repoName, issueId).Result;
             var result = issue.CreatedAt.UtcDateTime;

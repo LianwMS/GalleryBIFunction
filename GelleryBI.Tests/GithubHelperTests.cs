@@ -28,7 +28,7 @@ namespace GalleryBI.Tests
             for (int i = 0; i < result.Count(); i++)
             {
                 var template = result.ElementAt(i);
-                var owners = GithubHelper.GetTemplateOwner(githubClient, template.Url).Result;
+                var owners = GithubHelper.GetTemplateOwner(githubClient, template).Result;
                 emailDic.Add(template.Url, owners);
             }
         }

@@ -31,6 +31,7 @@ namespace GalleryBI
         public string? Source { get; set; }
         public List<string>? ValidationActiveIssues { get; set; }
         public List<string>? ValidationNonActiveIssues { get; set; }
+        public List<string>? Email { get; set; }
     }
     public class TemplateMappingInfo
     {
