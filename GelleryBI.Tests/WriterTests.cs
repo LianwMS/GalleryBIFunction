@@ -25,8 +25,6 @@ namespace GalleryBI.Tests
                     Catalog = "Catalog",
                     Name = "Name",
                     Url = "Url",
-                    Author = "Author",
-                    Website = "Website",
                     Tags = new List<string>() { "Tag1", "Tag2" },
                     Star = 1,
                     Fork = 1,

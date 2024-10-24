@@ -10,9 +10,6 @@ namespace GalleryBI
         public string? Catalog { get; set; }
         public string? Name { get; set; }
         public string? Url { get; set; }
-        [JsonIgnore]
-        public string? Author { get; set; }
-        public string? Website { get; set; }
         public List<string>? Tags { get; set; }
         public long Star { get; set; }
         public long Fork { get; set; }
@@ -35,7 +32,7 @@ namespace GalleryBI
     }
     public class TemplateMappingInfo
     {
-        private static string tableCommand = ".alter table TestTemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Author:string, Website:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string, ValidationNonActiveIssues:string, Languages:string, Models:string, AzureServices:string, Types:string)";
+        private static string tableCommand = ".alter table TestTemplateInfo ( TimeStamp:datetime, Url:string, Name:string, Catalog:string, Tags:string, Star:long, Fork:long, Watch:long, Vistor:long, Clone:long, Topics:string, ValidationActiveIssues:string, ValidationNonActiveIssues:string, Languages:string, Models:string, AzureServices:string, Types:string)";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -43,8 +40,6 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "Catalog",    Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Catalog" },    { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Name",  Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Name" },  { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Url", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Url" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
-            new ColumnMapping { ColumnName = "Author", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Author" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
-            new ColumnMapping { ColumnName = "Website", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Website" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Tags", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Tags" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Star", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Star" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "Fork", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.Fork" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
