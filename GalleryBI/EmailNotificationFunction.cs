@@ -29,20 +29,36 @@ namespace GalleryBI
             logger.LogInformation($"C# Timer trigger function executed at: {now}");
 
             // Query the tempalte issue
-            var templates = new TemplateInfoReader(logger).ReadAsync().Result;
+            var templates = new TemplateInfoReader(logger).ReadAsync().Result.ToList();
             var templatesForEmail = templates.Where(t => t.ValidationActiveIssues != null && t.ValidationActiveIssues.Any()).ToList();
 
-            //// For Testing
-            //templatesForEmail.Add(new Template()
-            //{
-            //    Url = "https://github.com/LianwMS/GalleryBIFunction",
-            //    Name = "Azure-Samples/azure-search-openai-demo-java",
-            //    ValidationActiveIssues = new List<string>() { "https://github.com/microsoft/template-validation-action/issues/46" }
-            //});
-
-            // Generate the email list and unpublish list
+            // Generate the email list and unpublish list            
             var unpublishList = new List<string>();
             var emailList = new List<Email>();
+
+            // for loop templates to check if the repo is public. If not, add to unpublish list.
+            for (int i = 0; i < templates.Count; i++)
+            {
+                var template = templates[i];
+                var (owner, repoName) = GithubHelper.GetRepoOwnerAndName(template.Url);
+                try
+                {
+                    var repo = githubClient.Repository.Get(owner, repoName).Result;
+                    if (repo.Private)
+                    {
+                        unpublishList.Add(template.Url);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("Not Found"))
+                    {
+                        unpublishList.Add(template.Url);
+                    }
+                }
+            }
+
+            // Generate the email list and unpublish list            
             for (int i = 0; i < templatesForEmail.Count; i++)
             {
                 var template = templatesForEmail[i];
@@ -101,7 +117,7 @@ namespace GalleryBI
             logger.LogInformation("{0} emails. Remove dup...", emailList.Count);
             var emailInsertList = emailInfoWriter.RemoveDup(emailList).Result.ToList();
 
-            // Send the email in parallel
+            // Send the email
             logger.LogInformation("Total {0} emails need to be sent.", emailInsertList.Count);
             var emailSender = new EmailSender(logger);
 
