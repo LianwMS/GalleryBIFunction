@@ -107,6 +107,8 @@ namespace GalleryBI.Tests
                     TemplateName = "TemplateName",
                     Title = "Title",
                     Url = "Url",
+                    ReopenAt = null,
+                    IssueDetails = new List<string>() { "IssueDetail1", "IssueDetail2" }
                 }
             };
             writer.WriteAsync(data).Wait();

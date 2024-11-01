@@ -13,6 +13,8 @@ namespace GalleryBI
         public string? TemplateName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
+        public DateTime? ReopenAt { get; set; }
+        public List<string> IssueDetails { get; set; }
     }
 
     public class IssueMappingInfo
@@ -29,6 +31,8 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "TemplateName", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.TemplateName" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "CreatedAt", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.CreatedAt" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "ClosedAt", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ClosedAt" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "ReopenAt", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.ReopenAt" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "IssueDetails", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.IssueDetails" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

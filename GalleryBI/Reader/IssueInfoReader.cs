@@ -28,24 +28,59 @@ namespace GalleryBI
                 {
                     var issueUrl = enumerator.Current;
                     var (owner, repoName, issueId) = GithubHelper.ParseIssueUrl(issueUrl);
-                    var issue = githubClient.Issue.Get(owner, repoName, issueId);
+                    var issue = await githubClient.Issue.Get(owner, repoName, issueId);
                     var tempIssue = new Issue()
                     {
                         TimeStamp = currentTime,
-                        Id = issue.Result.Id.ToString(),
+                        Id = issue.Id.ToString(),
                         TemplateName = $"{owner}/{repoName}",
-                        Url = issue.Result.HtmlUrl,
-                        Status = issue.Result.State.ToString(),
-                        CreatedAt = issue.Result.CreatedAt.UtcDateTime,
-                        ClosedAt = issue.Result.ClosedAt?.UtcDateTime ?? null,
-                        Title = issue.Result.Title,
+                        Url = issue.HtmlUrl,
+                        Status = issue.State.ToString(),
+                        CreatedAt = issue.CreatedAt.UtcDateTime,
+                        ClosedAt = issue.ClosedAt?.UtcDateTime ?? null,
+                        ReopenAt = null,
+                        Title = issue.Title,
+                        IssueDetails = ParseIssueDetails(issue.Body),
                     };
+
+                    var issueEvents = await githubClient.Issue.Events.GetAllForIssue(owner, repoName, issueId).ConfigureAwait(false);
+                    for (int i = 0; i < issueEvents.Count; i++)
+                    {
+                        if (issueEvents[i].Event == EventInfoState.Reopened)
+                        {
+                            tempIssue.ReopenAt = issueEvents[i].CreatedAt.UtcDateTime;
+                        }
+                    }
                     result.Add(tempIssue);
                 }
             }
 
             this.logger.LogInformation("Issues count: " + result.Count);
             this.logger.LogInformation("Issues data read successfully");
+            return result;
+        }
+
+        public List<string> ParseIssueDetails(string issueBody)
+        {
+            var result = new List<string>();
+
+            if (issueBody != null)
+            {
+                var bodyLines = issueBody.Split('\n'); 
+                var errorLines = bodyLines.Where(l => l.StartsWith("- [ ]")).ToList();
+                foreach (var line in errorLines)
+                {
+                    foreach (var type in IssueDetailsTypes.All)
+                    {
+                        if (line.Contains(type, StringComparison.OrdinalIgnoreCase))
+                        {
+                            result.Add(type);
+                            break;
+                        }
+                    }
+                }
+            }
+
             return result;
         }
     }

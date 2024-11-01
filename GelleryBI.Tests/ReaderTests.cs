@@ -36,19 +36,32 @@ namespace GalleryBI.Tests
             var templateReader = new TemplateInfoReader(logger);
             var templates = templateReader.ReadAsync().Result;
 
-            var validationReader = new ValidationInfoReader(logger);
-            var validations = validationReader.ReadAsync().Result;
+            //var validationReader = new ValidationInfoReader(logger);
+            //var validations = validationReader.ReadAsync().Result;
 
             var allValidationActiveIssues = templates
                 .Where(t => t.ValidationActiveIssues != null)
                 .SelectMany(t => t.ValidationActiveIssues ?? new List<string>()).ToList();
 
-            var openedIn7DaysIssues = validations
-                .Where(t => t.Details != null && t.Details.StartsWith("https"))
-                .Select(t => t.Details).ToList();
+            var allValidationClosedIssues = templates
+                .Where(t => t.ValidationNonActiveIssues != null)
+                .SelectMany(t => t.ValidationNonActiveIssues ?? new List<string>()).ToList();
 
-            var candidate = allValidationActiveIssues.Union(openedIn7DaysIssues).ToList();
+            //var openedIn7DaysIssues = validations
+            //    .Where(t => t.Details != null && t.Details.StartsWith("https"))
+            //    .Select(t => t.Details).ToList();
 
+            var candidate = allValidationActiveIssues.Union(allValidationClosedIssues);//.Union(openedIn7DaysIssues).ToList();
+
+            var issueReader = new IssueInfoReader(logger);
+            var issues = issueReader.ReadAsync(candidate).Result;
+            Assert.AreNotEqual(-1, issues.Count());
+        }
+
+        [TestMethod]
+        public void IssueDetailsReaderTest()
+        {
+            var candidate = new List<string> { "https://github.com/Azure-Samples/summarization-openai-python-promptflow/issues/97" };
             var issueReader = new IssueInfoReader(logger);
             var issues = issueReader.ReadAsync(candidate).Result;
             Assert.AreNotEqual(-1, issues.Count());
