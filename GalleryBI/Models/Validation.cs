@@ -16,11 +16,12 @@ namespace GalleryBI
         public string? JobId { get; set; }
         public DateTime RunStartTime { get; set; }
         public string? AttemptId { get; set; }
+        public List<string>? FailureDetails { get; set; }
     }
 
     public class ValidationMappingInfo
     {
-        private static string tableCommand = ".alter table Validations ( TimeStamp:datetime, Url:string, RunTime:datetime, Result:string, Details:string, WorkflowRepoName: string, WorkflowName: string, RunId: string, JobId: string, RunStartTime: datetime, AttemptId: string)";
+        private static string tableCommand = ".alter table Validations ( TimeStamp:datetime, Url:string, RunTime:datetime, Result:string, Details:string, WorkflowRepoName: string, WorkflowName: string, RunId: string, JobId: string, RunStartTime: datetime, AttemptId: string, FailureDetails: string)";
         public static string Name = "ValidationMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
@@ -35,6 +36,7 @@ namespace GalleryBI
             new ColumnMapping { ColumnName = "JobId", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.JobId" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "RunStartTime", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.RunStartTime" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
             new ColumnMapping { ColumnName = "AttemptId", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.AttemptId" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
+            new ColumnMapping { ColumnName = "FailureDetails", Properties = new Dictionary<string, string>{ { MappingConsts.Path, "$.FailureDetails" }, { MappingConsts.TransformationMethod, CsvFromJsonStream_TransformationMethod.None.FastToString() } } },
         };
     }
 }

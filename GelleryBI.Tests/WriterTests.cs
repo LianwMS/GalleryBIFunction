@@ -62,7 +62,8 @@ namespace GalleryBI.Tests
                     RunId = "12345",
                     JobId = "12345",
                     RunStartTime= DateTime.UtcNow,
-                    AttemptId = "12345"
+                    AttemptId = "12345",
+                    FailureDetails = new List<string>() { "FailureDetail1", "FailureDetail2" }
                 }
             };
             writer.WriteAsync(data).Wait();
@@ -85,6 +86,9 @@ namespace GalleryBI.Tests
                     WorkflowRepoName = "WorkflowRepoName",
                     RunId = "12345",
                     JobId = "12345",
+                    RunStartTime = DateTime.UtcNow,
+                    AttemptId = "12345",
+                    FailureDetails = new List<string>() { "FailureDetail1", "FailureDetail2" }
                 }
             };
 

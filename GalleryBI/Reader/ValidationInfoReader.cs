@@ -55,23 +55,7 @@ namespace GalleryBI
                             };
                             if (jobs.Jobs[j].Conclusion == WorkflowJobConclusion.Failure)
                             {
-                                // Get Step Log?
-                                var log = await this.githubClient.Actions.Workflows.Jobs.GetLogs(AppContext.ValidationRepoOwner, AppContext.ValidationRepoName, jobs.Jobs[j].Id);
-                                validation.Details = log;
-                                List<string> logs = log.Split("\n").ToList();
-                                int pos = logs.FindIndex(x => x.EndsWith("Validation failed, creating issue"));
-                                if (pos != -1)
-                                {
-                                    var issueLogs = logs[pos + 1].Split(" ").ToList();
-                                    if (issueLogs.Count > 1)
-                                    {
-                                        var issue = issueLogs[1];
-                                        if (issue.StartsWith("https"))
-                                        {
-                                            validation.Details = issue;
-                                        }
-                                    }
-                                }
+                                validation = await GetValidationDetails(validation, jobs.Jobs[j].Id);
                             }
                             validations.Add(validation);
                         }
@@ -82,6 +66,67 @@ namespace GalleryBI
             this.logger.LogInformation("Validations count: " + validations.Count);
             this.logger.LogInformation("Validations data read successfully.");
             return validations;
+        }
+
+        public async Task<Validation> GetValidationDetails(Validation validation, long id)
+        {
+            var detailsResult = string.Empty;
+            var failureDetailsResult = new List<string>();
+
+            // [Details] Get Step Log?
+            var log = await this.githubClient.Actions.Workflows.Jobs.GetLogs(AppContext.ValidationRepoOwner, AppContext.ValidationRepoName, id);
+            detailsResult = log;
+            List<string> fullLogs = log.Split("\n").ToList();
+            var failureDetails = new List<string>();
+
+            // [Details] Get Failure Details
+            int reportStart = fullLogs.FindIndex(x => x.Contains("# AI Gallery Standard Validation: "));
+            if (reportStart != -1)
+            {
+                int reportEnd = fullLogs.FindIndex(reportStart, x => x.Contains("Run if [[ true == 'true' ]]; then"));
+                if (reportEnd != -1)
+                {
+                    failureDetails = fullLogs.GetRange(reportStart, reportEnd - reportStart);
+                    detailsResult = string.Join("\n", failureDetails);
+
+                    // [FailureDetails] Get Failure Details
+                    var errorLines = failureDetails.Where(l => l.Contains("- [ ]")).ToList();
+                    foreach (var line in errorLines)
+                    {
+                        foreach (var type in IssueDetailsTypes.All)
+                        {
+                            if (line.Contains(type, StringComparison.OrdinalIgnoreCase))
+                            {
+                                failureDetailsResult.Add(type);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Remove dup items in failureDetailsResult
+                    failureDetailsResult = failureDetailsResult.Distinct().ToList();
+                }
+            }
+
+            // [Details] Get Issue
+            int pos = fullLogs.FindIndex(x => x.EndsWith("Validation failed, creating issue"));
+            if (pos != -1)
+            {
+                var issueLogs = fullLogs[pos + 1].Split(" ").ToList();
+                if (issueLogs.Count > 1)
+                {
+                    var issue = issueLogs[1];
+                    if (issue.StartsWith("https"))
+                    {
+                        detailsResult = issue;
+                    }
+                }
+            }
+
+            validation.Details = detailsResult;
+            validation.FailureDetails = failureDetailsResult;
+
+            return validation;
         }
     }
 }

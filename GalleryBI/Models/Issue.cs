@@ -19,7 +19,7 @@ namespace GalleryBI
 
     public class IssueMappingInfo
     {
-        private static string tableCommand = ".alter table Issues ( TimeStamp:datetime, Id:string, Url:string, Title:string, Status:string, TemplateName:string, CreatedAt:datetime, ClosedAt:datetime)";
+        private static string tableCommand = ".alter table Issues ( TimeStamp:datetime, Id:string, Url:string, Title:string, Status:string, TemplateName:string, CreatedAt:datetime, ClosedAt:datetime, ReopenAt:datetime, IssueDetails:string)";
         public static string Name = "TestJsonMapping";
         public static readonly ColumnMapping[] Mapping = new ColumnMapping[]
         {
